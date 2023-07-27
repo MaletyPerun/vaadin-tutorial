@@ -2,6 +2,7 @@ package com.example.application.security;
 
 import com.example.application.views.list.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,7 +24,7 @@ public class SecurityConfig extends VaadinWebSecurity {
     }
 
     // TODO: 27.07.2023 здесь использовать кредешеналы через app.properties
-    //  @Bean
+      @Bean
     public UserDetailsService users() {
         UserDetails user = User.builder()
                 .username("user")
