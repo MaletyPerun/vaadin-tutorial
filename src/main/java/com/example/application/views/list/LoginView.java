@@ -1,0 +1,32 @@
+package com.example.application.views.list;
+
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.login.LoginForm;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+
+public class LoginView extends VerticalLayout implements BeforeEnterObserver {
+    private final LoginForm login = new LoginForm();
+
+    public LoginView() {
+        addClassName("login-form");
+        setSizeFull();
+        setAlignItems(Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
+
+        login.setAction("login");
+
+        add(new H1("Vaddin CRM"), login);
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        if(event.getLocation()
+                .getQueryParameters()
+                .getParameters()
+                .containsKey("error")) {
+            login.setError(true);
+        }
+    }
+}
