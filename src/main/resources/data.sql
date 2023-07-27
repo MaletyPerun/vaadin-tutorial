@@ -62,3 +62,9 @@ INSERT INTO "CONTACT" (ID, VERSION, EMAIL,FIRST_NAME,LAST_NAME,COMPANY_ID,STATUS
 (58, 1, 'bryan.shaw@ha.ee', 'Bryan', 'Shaw', 9, 1),
 (59, 1, 'essie.adams@iliat.cw', 'Essie', 'Adams', 8, 5),
 (60, 1, 'gary.osborne@do.ga', 'Gary', 'Osborne', 7, 5);
+
+INSERT INTO "CONTACT2" (ID, VERSION, EMAIL,FIRST_NAME,LAST_NAME,COMPANY_ID,STATUS_ID) VALUES
+    (61, 1, 'gary.osborne@do.ga', 'Gary', 'Osborne', 7, 5);
+
+-- INSERT INTO USERS (ID, VERSION, FIRST_NAME, LAST_NAME, PATRONYMIC, BIRTHDAY, EMAIL, PASSWORD, PHONE, ROLES) VALUES
+-- (61, 1, 'Ivan', 'Ivanov', 'Ivanovich', '13.04.1992', 'ivan@box.ru', 'ivan1992', '432-24-56', 'USER');
