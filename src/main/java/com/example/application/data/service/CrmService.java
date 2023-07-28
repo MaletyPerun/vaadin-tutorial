@@ -1,15 +1,9 @@
 package com.example.application.data.service;
 
-import com.example.application.data.dto.UserDto;
-import com.example.application.data.entity.Company;
-import com.example.application.data.entity.Contact;
-import com.example.application.data.entity.Status;
-import com.example.application.data.entity.User;
-import com.example.application.data.repository.CompanyRepository;
-import com.example.application.data.repository.ContactRepository;
-import com.example.application.data.repository.StatusRepository;
-import com.example.application.data.repository.UserRepository;
-import com.example.application.data.util.UserUtil;
+import com.example.application.data.dto.PersonDto;
+import com.example.application.data.entity.*;
+import com.example.application.data.repository.*;
+import com.example.application.data.util.PersonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +15,32 @@ public class CrmService {
 
     private final ContactRepository contactRepository;
     private final CompanyRepository companyRepository;
-    private final StatusRepository statusRepository;
-    private final UserRepository userRepository;
 
-//    public CrmService(ContactRepository contactRepository,
-//                      CompanyRepository companyRepository,
-//                      StatusRepository statusRepository) {
-//        this.contactRepository = contactRepository;
-//        this.companyRepository = companyRepository;
-//        this.statusRepository = statusRepository;
-//    }
+    private final PersonRepository personRepository;
+
+
+    public List<PersonDto> getAllPersons(String stringFilter) {
+
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return personRepository.findAll().stream()
+                    .map(PersonUtil::personToDto)
+                    .toList();
+        } else {
+            return personRepository.search(stringFilter).stream()
+                    .map(PersonUtil::personToDto)
+                    .toList();
+        }
+    }
+
+
+    public void createPerson(PersonDto personDto) {
+        if (personDto == null) {
+            System.err.println("Person is null. Are you sure you have connected your form to the application?");
+            return;
+        }
+        Person createdPerson = PersonUtil.dtoToPerson(personDto);
+        personRepository.save(createdPerson);
+    }
 
     public List<Contact> findAllContacts(String stringFilter) {
         if (stringFilter == null || stringFilter.isEmpty()) {
@@ -38,10 +48,6 @@ public class CrmService {
         } else {
             return contactRepository.search(stringFilter);
         }
-    }
-
-    public long countContacts() {
-        return contactRepository.count();
     }
 
     public void deleteContact(Contact contact) {
@@ -61,68 +67,7 @@ public class CrmService {
         return companyRepository.findAll();
     }
 
-    public List<Status> findAllStatuses(){
-        return statusRepository.findAll();
-    }
-
-//    public List<Contact> findAllContacts(String stringFilter) {
-//        if (stringFilter == null || stringFilter.isEmpty()) {
-//            return contactRepository.findAll();
-//        } else {
-//            return contactRepository.search(stringFilter);
-//        }
-//    }
-
-    public List<UserDto> getAllUsers(String stringFilter){
-
-        if (stringFilter == null || stringFilter.isEmpty()) {
-            return userRepository.findAll().stream()
-                    .map(UserUtil::userToDto)
-                    .toList();
-        } else {
-            return userRepository.search(stringFilter).stream()
-                    .map(UserUtil::userToDto)
-                    .toList();
-        }
-    }
-
-    public UserDto get(long id){
-        return UserUtil.userToDto(userRepository.getReferenceById(id));
-    }
-
-    public void create(UserDto userDto) {
-        if (userDto == null) {
-//            throw new Exception();
-        }
-        User created = UserUtil.dtoToUser(userDto);
-        userRepository.save(created);
-    }
-
-    public void update(UserDto oldUser, long id) {
-        User user = userRepository.getReferenceById(id);
-
-        if (oldUser.getFirstName() != null) {
-            user.setFirstName(oldUser.getFirstName());
-        }
-        if (oldUser.getLastName() != null) {
-            user.setLastName(oldUser.getLastName());
-        }
-        if (oldUser.getPatronymic() != null) {
-            user.setPatronymic(oldUser.getPatronymic());
-        }
-        if (oldUser.getBirthday() != null) {
-            user.setBirthday(oldUser.getBirthday());
-        }
-        if (oldUser.getEmail() != null) {
-            user.setEmail(oldUser.getEmail());
-        }
-        if (oldUser.getPhone() != null) {
-            user.setPhone(oldUser.getPhone());
-        }
-        userRepository.save(user);
-    }
-
-    public void delete(long id) {
-        userRepository.deleteById(id);
+    public void deletePerson(long id) {
+        personRepository.deleteById(id);
     }
 }

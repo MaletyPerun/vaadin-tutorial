@@ -1,6 +1,6 @@
 package com.example.application.views.list;
 
-import com.example.application.data.dto.UserDto;
+import com.example.application.data.dto.PersonDto;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -13,17 +13,17 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
-@Route(value = "admin", layout = MainLayout.class)
+@Route(value = "admin-person", layout = MainLayout.class)
 @PageTitle("Admin panel")
 //@RequiredArgsConstructor
 @PermitAll
-public class AdminView extends VerticalLayout {
+public class AdminPersonView extends VerticalLayout {
     CrmService service;
-    Grid<UserDto> grid = new Grid<>(UserDto.class);
+    Grid<PersonDto> grid = new Grid<>(PersonDto.class);
     TextField filterText = new TextField();
-    UserDtoForm userForm;
+    PersonDtoForm personDtoForm;
 
-    public AdminView(CrmService service) {
+    public AdminPersonView(CrmService service) {
         this.service = service;
         addClassName("list-view");
         setSizeFull();
@@ -35,54 +35,46 @@ public class AdminView extends VerticalLayout {
         closeEditor();
     }
     private Component getContent() {
-        HorizontalLayout content = new HorizontalLayout(grid, userForm);
+        HorizontalLayout content = new HorizontalLayout(grid, personDtoForm);
         content.setFlexGrow(2, grid);
-        content.setFlexGrow(1, userForm);
+        content.setFlexGrow(1, personDtoForm);
         content.addClassName("content");
         content.setSizeFull();
         return content;
     }
 
     private void configureForm() {
-        userForm = new UserDtoForm();
-        userForm.setWidth("25em");
-        userForm.addSaveListener(this::saveUser);
-        userForm.addDeleteListener(this::deleteUser);
-        userForm.addCloseListener(event -> closeEditor());
+        personDtoForm = new PersonDtoForm();
+        personDtoForm.setWidth("25em");
+        personDtoForm.addSaveListener(this::savePersonDto);
+        personDtoForm.addDeleteListener(this::deletePerson);
+        personDtoForm.addCloseListener(event -> closeEditor());
 
     }
 
-    private void saveUser(UserDtoForm.SaveEvent event) {
+    private void savePersonDto(PersonDtoForm.SaveEvent event) {
         // TODO: 28.07.2023 стоит ли все загонять без update?
-        service.create(event.getUser());
+        service.createPerson(event.getPersonDto());
         updateList();
         closeEditor();
     }
-//
-    private void deleteUser(UserDtoForm.DeleteEvent event) {
-        service.delete(event.getUser().getId());
+
+    private void deletePerson(PersonDtoForm.DeleteEvent event) {
+        service.deletePerson(event.getPersonDto().getId());
         updateList();
         closeEditor();
     }
-//
-//
+
     private void configureGrid() {
-//        firstName,
-//                lastName,
-//                patronymic,
-//                birthday,
-//                email,
-//                phone,
-        grid.addClassNames("user-grid");
+        grid.addClassNames("person-grid");
         grid.setSizeFull();
-        grid.setColumns("id", "firstName", "lastName", "patronymic", "birthday", "email", "phone", "roles");
-//        grid.addColumn(userDto -> userDto.getStatus().getName()).setHeader("Status");
-//        grid.addColumn(contact -> contact.getCompany().getName()).setHeader("Company");
+        grid.setColumns("id", "firstName", "lastName", "patronymic", "birthday", "email", "phone");
+        grid.addColumn(PersonDto::isAdmin).setHeader("Admin");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        grid.asSingleSelect().addValueChangeListener(event -> editUserDto(event.getValue()));
+        grid.asSingleSelect().addValueChangeListener(event -> editPersonDto(event.getValue()));
     }
-//
+
     private HorizontalLayout getToolbar() {
         filterText.setPlaceholder("Filter by name...");
         filterText.setClearButtonVisible(true);
@@ -90,38 +82,36 @@ public class AdminView extends VerticalLayout {
         filterText.addValueChangeListener(e -> updateList());
 
         Button addContactButton = new Button("Add contact");
-        addContactButton.addClickListener(event -> addUserDto());
+        addContactButton.addClickListener(event -> addPersonDto());
 
         var toolbar = new HorizontalLayout(filterText, addContactButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
-//
-    public void editUserDto(UserDto user) {
+
+    public void editPersonDto(PersonDto user) {
         if (user == null) {
             closeEditor();
         } else {
-            userForm.setUserDto(user);
-            userForm.setVisible(true);
+            personDtoForm.setPersonDto(user);
+            personDtoForm.setVisible(true);
             addClassName("editing");
         }
     }
-//
+
     private void closeEditor() {
-        userForm.setUserDto(null);
-        userForm.setVisible(false);
+        personDtoForm.setPersonDto(null);
+        personDtoForm.setVisible(false);
         removeClassName("editing");
     }
-//
-    private void addUserDto() {
+
+    private void addPersonDto() {
         grid.asSingleSelect().clear();
-        editUserDto(UserDto.builder().build());
+        editPersonDto(PersonDto.builder().build());
     }
-//
+
     private void updateList() {
-        grid.setItems(service.getAllUsers(filterText.getValue()));
-//        grid.setItems(service.getAllUsers(filterText.getValue()));
-//        grid.setItems(service.findAllContacts(filterText.getValue()));
+        grid.setItems(service.getAllPersons(filterText.getValue()));
     }
 
 }
