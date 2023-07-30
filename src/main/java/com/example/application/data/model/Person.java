@@ -37,7 +37,7 @@ public class Person {
     private String phone;
 
     // настройка и привязка отдельной таблицы с ролями
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @CollectionTable(name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"person_id", "role"}, name = "uk_person_role"))
