@@ -1,7 +1,8 @@
 package com.example.application.views.list;
 
 import com.example.application.data.dto.PersonDto;
-import com.example.application.data.service.CrmService;
+import com.example.application.data.service.PersonService;
+import com.example.application.security.SecurityService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -11,20 +12,24 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
+import lombok.extern.slf4j.Slf4j;
 
 @Route(value = "", layout = MainLayout.class)
-@PageTitle("User panel")
-//@RequiredArgsConstructor
-//@PermitAll
-@RolesAllowed("ROLE_USER")
+@PageTitle("Person panel")
+@PermitAll
+@Slf4j
 public class ProfilePersonView extends VerticalLayout {
-    CrmService service;
+
+    // настройка отображения таблицы и CRUD-формы
+    SecurityService securityService;
+    PersonService service;
     Grid<PersonDto> grid = new Grid<>(PersonDto.class);
     TextField filterText = new TextField();
     PersonDtoForm personDtoForm;
 
-    public ProfilePersonView(CrmService service) {
+    public ProfilePersonView(PersonService service, SecurityService securityService) {
+        this.securityService = securityService;
         this.service = service;
         addClassName("list-view");
         setSizeFull();
@@ -35,6 +40,9 @@ public class ProfilePersonView extends VerticalLayout {
         updateList();
         closeEditor();
     }
+
+    // добавление в отображение таблицы с CRUD-формы
+
     private Component getContent() {
         HorizontalLayout content = new HorizontalLayout(grid, personDtoForm);
         content.setFlexGrow(2, grid);
@@ -48,23 +56,11 @@ public class ProfilePersonView extends VerticalLayout {
         personDtoForm = new PersonDtoForm();
         personDtoForm.setWidth("25em");
         personDtoForm.addSaveListener(this::savePersonDto);
-        personDtoForm.addDeleteListener(this::deletePerson);
+        personDtoForm.addDeleteListener(this::deletePersonDto);
         personDtoForm.addCloseListener(event -> closeEditor());
-
     }
 
-    private void savePersonDto(PersonDtoForm.SaveEvent event) {
-        // TODO: 28.07.2023 стоит ли все загонять без update?
-        service.createPerson(event.getPersonDto());
-        updateList();
-        closeEditor();
-    }
 
-    private void deletePerson(PersonDtoForm.DeleteEvent event) {
-        service.deletePerson(event.getPersonDto().getId());
-        updateList();
-        closeEditor();
-    }
 
     private void configureGrid() {
         grid.addClassNames("person-grid");
@@ -90,14 +86,33 @@ public class ProfilePersonView extends VerticalLayout {
         return toolbar;
     }
 
-    public void editPersonDto(PersonDto user) {
-        if (user == null) {
+    // CRUD-операции в зависимости от нажатой кнопки
+
+    private void savePersonDto(PersonDtoForm.SaveEvent event) {
+        service.savePerson(event.getPersonDto(), securityService.getAuthenticatedUser());
+        updateList();
+        closeEditor();
+    }
+
+    private void deletePersonDto(PersonDtoForm.DeleteEvent event) {
+        service.deletePerson(event.getPersonDto().getId());
+        updateList();
+        closeEditor();
+    }
+
+    public void editPersonDto(PersonDto personDto) {
+        if (personDto == null) {
             closeEditor();
         } else {
-            personDtoForm.setPersonDto(user);
+            personDtoForm.setPersonDto(personDto);
             personDtoForm.setVisible(true);
             addClassName("editing");
         }
+    }
+
+    private void addPersonDto() {
+        grid.asSingleSelect().clear();
+        editPersonDto(PersonDto.builder().build());
     }
 
     private void closeEditor() {
@@ -106,13 +121,8 @@ public class ProfilePersonView extends VerticalLayout {
         removeClassName("editing");
     }
 
-    private void addPersonDto() {
-        grid.asSingleSelect().clear();
-        editPersonDto(PersonDto.builder().build());
-    }
-
     private void updateList() {
-        grid.setItems(service.getAllPersons(filterText.getValue()));
+        grid.setItems(service.getAllPersons(filterText.getValue(), securityService.getAuthenticatedUser()));
     }
 
 }

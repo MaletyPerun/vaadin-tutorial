@@ -16,6 +16,8 @@ import com.vaadin.flow.shared.Registration;
 
 public class PersonDtoForm extends FormLayout {
 
+    // настройка отображения CRUD-формы
+
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
     TextField patronymic = new TextField("Patronymic");
@@ -24,12 +26,14 @@ public class PersonDtoForm extends FormLayout {
     TextField phone = new TextField("Phone");
     Checkbox isAdmin = new Checkbox("Admin");
 
-
+    // создание кнопок управления CRUD-формой
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Close");
 
     Binder<PersonDto> binder = new BeanValidationBinder<>(PersonDto.class);
+
+    // конструктор с добавлением полей в зависимости от прлей объекта на основе bing-га (автоматической привязки)
 
     public PersonDtoForm() {
         addClassName("user-form");
@@ -50,6 +54,8 @@ public class PersonDtoForm extends FormLayout {
         );
     }
 
+    // привязка действий на CRUD-кнопки
+
     private HorizontalLayout createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -67,6 +73,8 @@ public class PersonDtoForm extends FormLayout {
         return new HorizontalLayout(save, delete, close);
     }
 
+    // валидация по установленным аннотациям jakarta
+
     public void validateAndSave() {
         if (binder.isValid()) {
             fireEvent(new PersonDtoForm.SaveEvent(this, binder.getBean()));
@@ -78,12 +86,14 @@ public class PersonDtoForm extends FormLayout {
     }
 
 
-    public static abstract class UserDtoFormEvent extends ComponentEvent<PersonDtoForm> {
-        private PersonDto personDto;
+    // создание внутреннего класса с настройкой событий по каждой CRUD кнопке
 
-        protected UserDtoFormEvent(PersonDtoForm source, PersonDto user) {
+    public static abstract class PersonDtoFormEvent extends ComponentEvent<PersonDtoForm> {
+        private final PersonDto personDto;
+
+        protected PersonDtoFormEvent(PersonDtoForm source, PersonDto personDto) {
             super(source, false);
-            this.personDto = user;
+            this.personDto = personDto;
         }
 
         public PersonDto getPersonDto() {
@@ -91,20 +101,20 @@ public class PersonDtoForm extends FormLayout {
         }
     }
 
-    public static class SaveEvent extends UserDtoFormEvent {
+    public static class SaveEvent extends PersonDtoFormEvent {
         SaveEvent(PersonDtoForm source, PersonDto personDto) {
             super(source, personDto);
         }
     }
 
-    public static class DeleteEvent extends UserDtoFormEvent {
+    public static class DeleteEvent extends PersonDtoFormEvent {
         DeleteEvent(PersonDtoForm source, PersonDto personDto) {
             super(source, personDto);
         }
 
     }
 
-    public static class CloseEvent extends UserDtoFormEvent {
+    public static class CloseEvent extends PersonDtoFormEvent {
         CloseEvent(PersonDtoForm source) {
             super(source, null);
         }

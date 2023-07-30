@@ -1,6 +1,5 @@
-package com.example.application.data.entity;
+package com.example.application.data.model;
 
-import com.example.application.data.util.DateTimeUtil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,12 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Set;
-
-import static com.example.application.data.util.DateTimeUtil.DATE_TIME_PATTERN;
 
 @Entity
 @Getter
@@ -24,7 +20,6 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgenerator")
     @SequenceGenerator(name = "idgenerator", initialValue = 1000)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotBlank
     private String firstName;
@@ -33,7 +28,6 @@ public class Person {
     @NotBlank
     private String patronymic;
     @NotNull
-    @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private LocalDate birthday;
     @Email
     private String email;
@@ -42,7 +36,8 @@ public class Person {
     @NotEmpty
     private String phone;
 
-    @Enumerated(EnumType.STRING)
+    // настройка и привязка отдельной таблицы с ролями
+//    @Enumerated(EnumType.STRING)
     @CollectionTable(name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"person_id", "role"}, name = "uk_person_role"))
@@ -68,5 +63,11 @@ public class Person {
     }
 
     public Person() {
+    }
+
+    public String[] getRolesForSecurity() {
+        return roles.stream()
+                .map(Role::toString)
+                .toArray(String[]::new);
     }
 }
