@@ -72,5 +72,7 @@ RAM 4 Gb
 --- 
 
 #### логины и пароли
+```
 ADMIN: ivan@box.ru:ivan1992
 USER: petr@box.ru:petr1992
+```

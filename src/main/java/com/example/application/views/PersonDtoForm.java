@@ -1,4 +1,4 @@
-package com.example.application.views.list;
+package com.example.application.views;
 
 import com.example.application.data.dto.PersonDto;
 import com.vaadin.flow.component.*;
@@ -88,8 +88,8 @@ public class PersonDtoForm extends FormLayout {
 
     // создание внутреннего класса с настройкой событий по каждой CRUD кнопке
 
-    public static abstract class PersonDtoFormEvent extends ComponentEvent<PersonDtoForm> {
-        private final PersonDto personDto;
+    public abstract static class PersonDtoFormEvent extends ComponentEvent<PersonDtoForm> {
+        private final transient PersonDto personDto;
 
         protected PersonDtoFormEvent(PersonDtoForm source, PersonDto personDto) {
             super(source, false);

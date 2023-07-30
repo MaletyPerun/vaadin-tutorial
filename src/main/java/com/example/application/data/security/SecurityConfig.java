@@ -1,9 +1,8 @@
-package com.example.application.security;
+package com.example.application.data.security;
 
 import com.example.application.data.model.Person;
-import com.example.application.data.model.Role;
 import com.example.application.data.repository.PersonRepository;
-import com.example.application.views.list.LoginView;
+import com.example.application.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,15 +53,11 @@ public class SecurityConfig extends VaadinWebSecurity {
             Optional<Person> optionalUser = personRepository.findByEmailIgnoreCase(email);
             Person authPerson = optionalUser.orElseThrow(
                     () -> new UsernameNotFoundException("Person '" + email + "' was not found"));
-            System.out.println(authPerson.getRoles().contains(Role.ADMIN));
-            User authUser = (User) User.withDefaultPasswordEncoder()
+            return User.withDefaultPasswordEncoder()
                     .username(authPerson.getEmail())
                     .password(authPerson.getPassword())
                     .roles(authPerson.getRolesForSecurity())
                     .build();
-            log.info("authUser.getPassword() = {}", authUser.getPassword());
-            log.info("authPerson.getPassword() = {}", authPerson.getPassword());
-            return authUser;
         };
     }
 }

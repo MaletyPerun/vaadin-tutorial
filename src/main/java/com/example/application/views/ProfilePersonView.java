@@ -1,8 +1,8 @@
-package com.example.application.views.list;
+package com.example.application.views;
 
 import com.example.application.data.dto.PersonDto;
 import com.example.application.data.service.PersonService;
-import com.example.application.security.SecurityService;
+import com.example.application.data.security.SecurityService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -22,8 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfilePersonView extends VerticalLayout {
 
     // настройка отображения таблицы и CRUD-формы
-    SecurityService securityService;
-    PersonService service;
+    transient SecurityService securityService;
+    transient PersonService service;
     Grid<PersonDto> grid = new Grid<>(PersonDto.class);
     TextField filterText = new TextField();
     PersonDtoForm personDtoForm;
