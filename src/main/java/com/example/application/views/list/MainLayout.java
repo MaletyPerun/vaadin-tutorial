@@ -6,7 +6,6 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class MainLayout extends AppLayout {
@@ -39,7 +38,7 @@ public class MainLayout extends AppLayout {
 //                new RouterLink("List", ListView.class),
 //                new RouterLink("Dashboard", DashboardView.class),
 //                new RouterLink("Users", AdminView.class),
-                new RouterLink("Admin person", AdminPersonView.class)
+//                new RouterLink("Admin person", AdminPersonView.class)
                 ));
     }
 }

@@ -13,18 +13,18 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 
-@Route(value = "admin", layout = MainLayout.class)
-@PageTitle("Admin panel")
+@Route(value = "", layout = MainLayout.class)
+@PageTitle("User panel")
 //@RequiredArgsConstructor
 //@PermitAll
-@RolesAllowed("ROLE_ADMIN")
-public class AdminPersonView extends VerticalLayout {
+@RolesAllowed("ROLE_USER")
+public class ProfilePersonView extends VerticalLayout {
     CrmService service;
     Grid<PersonDto> grid = new Grid<>(PersonDto.class);
     TextField filterText = new TextField();
     PersonDtoForm personDtoForm;
 
-    public AdminPersonView(CrmService service) {
+    public ProfilePersonView(CrmService service) {
         this.service = service;
         addClassName("list-view");
         setSizeFull();
