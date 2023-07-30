@@ -22,11 +22,6 @@ public class Contact extends AbstractEntity {
     @NotNull
     @JsonIgnoreProperties({"employees"})
     private Company company;
-
-    @NotNull
-    @ManyToOne
-    private Status status;
-
     @Email
     @NotEmpty
     private String email = "";
@@ -58,14 +53,6 @@ public class Contact extends AbstractEntity {
 
     public void setCompany(Company company) {
         this.company = company;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public String getEmail() {

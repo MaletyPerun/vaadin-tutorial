@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {
     @Query("select p from Person p " +
@@ -13,4 +14,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
             "or lower(p.lastName) like lower(concat('%', :searchTerm, '%'))" +
             "or lower(p.patronymic) like lower(concat('%', :searchTerm, '%'))")
     List<Person> search(@Param("searchTerm") String searchTerm);
+
+    @Query("select p from Person p where p.email = lower(:email)")
+    Optional<Person> findByEmailIgnoreCase(String email);
 }
