@@ -1,61 +1,78 @@
-# Flow CRM Tutorial
+### Тестовое задание на чтение JSON файла и с БД
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+---
 
-## Running the application
+### ТЗ:
+Тестовое задание на позицию Java Backend разработчика.
+Описание задачи:
 
-The project is a standard Maven project. To run it from the command line,
-type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+Необходимо разработать Web-приложение средствами языка программирования Java
+с использованием фреймворков SpringBoot и Vaadin.
+Ожидаемый результат тестового задания – Web-приложение, при запуске которого
+пользователь видит страницу авторизации и не может получить доступ к
+контактной информации других пользователей. После авторизации в системе
+загружается таблица со всеми пользователями для администратора или личная
+карточка авторизованного пользователя, который не имеет роли администратора.
 
-You can also import the project to your IDE of choice as you would with any
-Maven project. Read more on [how to import Vaadin projects to different IDEs](https://vaadin.com/docs/latest/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
+Пункты, помеченные звёздочкой *, являются дополнительными.
+Обязательные условия:
 
-## Deploying to Production
-
-To create a production build, call `mvnw clean package -Pproduction` (Windows),
-or `./mvnw clean package -Pproduction` (Mac & Linux).
-This will build a JAR file with all the dependencies and front-end resources,
-ready to be deployed. The file can be found in the `target` folder after the build completes.
-
-Once the JAR file is built, you can run it using
-`java -jar target/flowcrmtutorial-1.0-SNAPSHOT.jar`
-
-## Project structure
-
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/docs/components/app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `frontend/` contains the client-side JavaScript views of your application.
-- `themes` folder in `frontend/` contains the custom CSS styles.
-
-## Useful links
-
-- Read the documentation at [vaadin.com/docs](https://vaadin.com/docs).
-- Follow the tutorial at [vaadin.com/docs/latest/tutorial/overview](https://vaadin.com/docs/latest/tutorial/overview).
-- Create new projects at [start.vaadin.com](https://start.vaadin.com/).
-- Search UI components and their usage examples at [vaadin.com/docs/latest/components](https://vaadin.com/docs/latest/components).
-- View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes). 
-- Find a collection of solutions to common use cases at [cookbook.vaadin.com](https://cookbook.vaadin.com/).
-- Find add-ons at [vaadin.com/directory](https://vaadin.com/directory).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
-- Report issues, create pull requests in [GitHub](https://github.com/vaadin).
-
-
-## Deploying using Docker
-
-To build the Dockerized version of the project, run
-
+1. Реализовать возможность авторизации по логину и паролю (admin:admin). Тип
+авторизации разрешается выбрать с обоснованием: Base Auth, OAuth, JWT;
+2. Реализовать CRUD модель для работы с пользователями системы (добавление,
+просмотр, изменение, удаление для администратора и просмотр для
+пользователя);
+3. *Реализовать CRUD модель для возможности работы с фотографией
+пользователя;
+Хранимая информации о "пользователе":
 ```
-mvn clean package -Pproduction
-docker build . -t flowcrmtutorial:latest
+1 ) Фамилия
+2 ) Имя
+3 ) Отчество
+4 ) Дата рождения
+5 ) Электронная почта
+6 ) Номер телефона
+7*) Фотография
 ```
 
-Once the Docker image is correctly built, you can test it locally using
+Будет плюсом, если:
+1. Выбранная Вами СУБД - PostgreSQL;
+2. Проект будет покрыт Mock-тестами и/или тестами базы данных;
+3. В проекте будут присутствовать комментарии к коду;
+4. Для работы с базой данных будет использован Hibernate;
+5. Исходный код проекта будет доступен в открытом доступе на Git;
+6. *Дополнительные задания в разделе обязательных будут выполнены;
 
+Ожидаемые данные:
+1. Исходный код готового проекта;
+2. Описание действий, необходимых для билда проекта;
+
+Сроки выполнения задания:
+На выполнение задания предоставляется 3 дня.
+
+---
+Используется Spring Boot 3 и Vaadin фреймворки.
+Выбрана Base Auth технология аутетификации и БД PosgreSQL.
+
+При разработке использовалась ОС MacOS:
+macOS Big Sur, версия 11.7.2
+Intel Core i5 1,3 GHz
+RAM 4 Gb
+
+--- 
+
+Для запуска приложения необходимо скачать проект,
+
+- установить URL, username и password БД (application.properties)
+- в папке проекта через консоль выполнить команды:
+* для Unix: `./mvnw clean install`
+* для Windows: `mvnw.cmd clean install`
+- далее:
+  `java -jar target/vaadin-tutorial-1.0-SNAPSHOT.jar`
+--- 
+
+#### логины и пароли
 ```
-docker run -p 8080:8080 flowcrmtutorial:latest
+ADMIN: ivan@box.ru:ivan1992
+USER: petr@box.ru:petr1992
 ```
